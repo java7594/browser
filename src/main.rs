@@ -136,9 +136,19 @@ fn create_tab(notebook: &Notebook, url: &str, url_entry: &Entry) {
     
     let nb = notebook.clone();
     let wv = webview.clone();
+    let entry_close = url_entry.clone();
     close_btn.connect_clicked(move |_| {
         if let Some(page) = nb.page_num(&wv) {
+            let total_pages = nb.n_pages();
             nb.remove_page(Some(page));
+            
+            if total_pages > 1 {
+                if let Some(current_wv) = get_current_webview(&nb) {
+                    if let Some(uri) = current_wv.uri() {
+                        entry_close.set_text(&uri);
+                    }
+                }
+            }
         }
     });
 
