@@ -22,7 +22,6 @@ const SEARCH_ENGINES: &[SearchEngine] = &[
     SearchEngine { name: "Google", url: "https://www.google.com/search?q=" },
     SearchEngine { name: "Bing", url: "https://www.bing.com/search?q=" },
     SearchEngine { name: "Kagi", url: "https://kagi.com/search?q=" },
-    SearchEngine { name: "Dogpile", url: "https://www.dogpile.com/serp?q=" },
     SearchEngine { name: "Yahoo", url: "https://search.yahoo.com/search?q=" },
 ];
 
