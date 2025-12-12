@@ -1,8 +1,6 @@
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow, Box, Button, Entry, Orientation, Notebook, ComboBoxText, Label};
-use gtk::glib;
-use webkit2gtk::{WebView, WebViewExt, SettingsExt, WebContext, WebContextExt, WebsiteDataManagerExt, WebsiteDataManagerExtManual, CookieManagerExt};
-use gtk::gio;
+use webkit2gtk::{WebView, WebViewExt, SettingsExt, WebContext, WebContextExt, WebsiteDataManagerExt, CookieManagerExt};
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fs;
@@ -57,6 +55,7 @@ fn load_search_engine() -> usize {
         .ok()
         .and_then(|s| s.trim().parse().ok())
         .unwrap_or(0)
+        .min(SEARCH_ENGINES.len() - 1)
 }
 
 fn save_search_engine(index: usize) {
@@ -312,15 +311,16 @@ fn create_tab(notebook: &Notebook, url: &str, url_entry: &Entry, web_context: &R
     let entry_close = url_entry.clone();
     close_btn.connect_clicked(move |_| {
         if let Some(page) = nb.page_num(&wv) {
-            let total_pages = nb.n_pages();
             nb.remove_page(Some(page));
             
-            if total_pages > 1 {
+            if nb.n_pages() > 0 {
                 if let Some(current_wv) = get_current_webview(&nb) {
                     if let Some(uri) = current_wv.uri() {
                         entry_close.set_text(&uri);
                     }
                 }
+            } else {
+                entry_close.set_text("about:blank");
             }
         }
     });
